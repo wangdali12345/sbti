@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -19,56 +18,25 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .particles {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; overflow: hidden; pointer-events: none;
-        }
-        .particle {
-            position: absolute; width: 3px; height: 3px;
-            background: rgba(255,255,255,0.4); border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh); opacity: 0; }
-        }
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; }
+        .particle { position: absolute; width: 3px; height: 3px; background: rgba(255,255,255,0.4); border-radius: 50%; animation: float 20s infinite linear; }
+        @keyframes float { 0% { transform: translateY(100vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
 
         .container { max-width: 700px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }
-
-        .header {
-            text-align: center; margin-bottom: 40px;
-            animation: fadeIn 0.8s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .logo {
-            width: 70px; height: 70px; margin: 0 auto 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 18px; display: flex; align-items: center; justify-content: center;
-            font-size: 28px; font-weight: 700;
-            box-shadow: 0 20px 50px rgba(102,126,234,0.35);
-        }
+        .header { text-align: center; margin-bottom: 40px; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .logo { width: 70px; height: 70px; margin: 0 auto 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; box-shadow: 0 20px 50px rgba(102,126,234,0.35); }
         .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
         .header p { font-size: 14px; color: rgba(255,255,255,0.6); }
 
-        .progress-wrap { margin-bottom: 32px; animation: fadeIn 0.8s ease 0.2s both; }
+        .progress-wrap { margin-bottom: 32px; animation: fadeIn 0.8s ease 0.2s both; display: none; }
+        .progress-wrap.show { display: block; }
         .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
         .progress-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
 
-        .card {
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 24px; padding: 36px;
-            animation: fadeIn 0.8s ease 0.4s both;
-        }
+        .card { background: rgba(255,255,255,0.04); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 36px; animation: fadeIn 0.8s ease 0.4s both; }
 
-        /* Start Screen */
         .start-screen { text-align: center; }
         .start-icon { font-size: 56px; margin-bottom: 20px; }
         .start-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
@@ -79,21 +47,14 @@
         .feature-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; }
         .btn { display: inline-block; padding: 14px 48px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(102,126,234,0.4); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
-        /* Question */
         .q-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
         .q-badge { padding: 5px 14px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 100px; font-size: 12px; font-weight: 600; }
         .q-dim { font-size: 12px; color: rgba(255,255,255,0.4); }
         .q-text { font-size: 17px; font-weight: 500; margin-bottom: 24px; line-height: 1.7; }
         .opt-list { display: flex; flex-direction: column; gap: 10px; }
-        .opt-item {
-            display: flex; align-items: center; gap: 14px;
-            padding: 14px 18px;
-            background: rgba(255,255,255,0.03);
-            border: 2px solid rgba(255,255,255,0.06);
-            border-radius: 14px; cursor: pointer;
-            transition: all 0.25s;
-        }
+        .opt-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.06); border-radius: 14px; cursor: pointer; transition: all 0.25s; }
         .opt-item:hover { background: rgba(102,126,234,0.12); border-color: rgba(102,126,234,0.4); transform: translateX(4px); }
         .opt-item.sel { background: rgba(102,126,234,0.2); border-color: #667eea; box-shadow: 0 0 20px rgba(102,126,234,0.15); }
         .opt-dot { width: 22px; height: 22px; border: 2px solid rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.25s; }
@@ -105,16 +66,13 @@
         .btn-nav:hover:not(:disabled) { background: rgba(255,255,255,0.1); }
         .btn-nav:disabled { opacity: 0.35; cursor: not-allowed; }
         .btn-next { background: linear-gradient(135deg, #667eea, #764ba2); border: none; box-shadow: 0 8px 24px rgba(102,126,234,0.25); }
-        .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none; }
 
-        /* Loading */
         .loading { text-align: center; padding: 60px 0; display: none; }
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #667eea; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-text { font-size: 15px; color: rgba(255,255,255,0.6); }
         .loading-steps { margin-top: 16px; font-size: 12px; color: rgba(255,255,255,0.4); }
 
-        /* Result */
         .result-screen { display: none; }
         .res-type-box { text-align: center; padding: 36px; background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15)); border-radius: 20px; margin-bottom: 28px; }
         .res-badge { display: inline-block; padding: 6px 18px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 100px; font-size: 12px; font-weight: 600; margin-bottom: 14px; }
@@ -122,7 +80,13 @@
         .res-name { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
         .res-brief { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; }
 
-        /* Score Row */
+        .radar-wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 28px; }
+        .radar-item { text-align: center; }
+        .radar-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+        .radar-chart { width: 120px; height: 120px; margin: 0 auto; border-radius: 50%; background: conic-gradient(#667eea 0deg, #667eea calc(var(--p) * 3.6deg), rgba(255,255,255,0.08) calc(var(--p) * 3.6deg)); display: flex; align-items: center; justify-content: center; }
+        .radar-inner { width: 70px; height: 70px; background: rgba(30,30,50,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+        .radar-title { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+
         .score-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
         .score-card { padding: 16px; background: rgba(255,255,255,0.03); border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); }
         .score-label { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
@@ -132,33 +96,25 @@
         .score-val { font-size: 14px; font-weight: 700; min-width: 40px; text-align: right; }
         .score-letter { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
 
-        /* Radar */
-        .chart-wrap { height: 260px; margin-bottom: 28px; }
-
-        /* Section */
         .res-section { margin-bottom: 24px; }
         .res-section-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: rgba(255,255,255,0.85); }
         .trait-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .trait-tag { padding: 8px 14px; background: rgba(102,126,234,0.12); border: 1px solid rgba(102,126,234,0.25); border-radius: 100px; font-size: 12px; }
         .trait-tag.highlight { background: rgba(102,126,234,0.25); border-color: rgba(102,126,234,0.5); }
 
-        /* Advice */
         .advice-list { display: flex; flex-direction: column; gap: 10px; }
         .advice-item { display: flex; gap: 12px; padding: 14px; background: rgba(255,255,255,0.03); border-radius: 12px; font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.7; }
         .advice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
-        /* Reliability */
         .reliability-box { padding: 16px; background: rgba(255,255,255,0.03); border-radius: 14px; margin-bottom: 24px; border-left: 3px solid #667eea; }
         .reliability-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
         .reliability-desc { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.7; }
         .reliability-score { display: inline-block; padding: 3px 10px; background: rgba(102,126,234,0.2); border-radius: 100px; font-size: 12px; font-weight: 600; color: #667eea; margin-left: 6px; }
 
-        /* Careers */
         .career-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 
         .hidden { display: none !important; }
 
-        /* Bottom share */
         .btn-group { display: flex; gap: 12px; margin-top: 28px; }
         .btn-ghost { flex: 1; padding: 13px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: white; border-radius: 12px; font-size: 14px; cursor: pointer; transition: all 0.25s; }
         .btn-ghost:hover { background: rgba(255,255,255,0.08); }
@@ -168,6 +124,7 @@
             .card { padding: 24px 20px; }
             .feature-row { grid-template-columns: repeat(2, 1fr); }
             .score-row { grid-template-columns: 1fr; }
+            .radar-wrap { grid-template-columns: repeat(2, 1fr); }
             .res-code { font-size: 44px; }
         }
     </style>
@@ -182,7 +139,7 @@
             <p>基于MBTI理论框架 · 科学测评 · 专业分析</p>
         </div>
 
-        <div class="progress-wrap hidden" id="progressWrap">
+        <div class="progress-wrap" id="progressWrap">
             <div class="progress-info">
                 <span id="progressLabel">题目 1 / 48</span>
                 <span id="progressPct">0%</span>
@@ -203,24 +160,12 @@
                     帮助您了解自己的职业优势与发展建议。
                 </div>
                 <div class="feature-row">
-                    <div class="feature-box">
-                        <div class="feature-num">48</div>
-                        <div class="feature-label">测评题目</div>
-                    </div>
-                    <div class="feature-box">
-                        <div class="feature-num">4</div>
-                        <div class="feature-label">核心维度</div>
-                    </div>
-                    <div class="feature-box">
-                        <div class="feature-num">16</div>
-                        <div class="feature-label">性格类型</div>
-                    </div>
-                    <div class="feature-box">
-                        <div class="feature-num">10</div>
-                        <div class="feature-label">分钟完成</div>
-                    </div>
+                    <div class="feature-box"><div class="feature-num">48</div><div class="feature-label">测评题目</div></div>
+                    <div class="feature-box"><div class="feature-num">4</div><div class="feature-label">核心维度</div></div>
+                    <div class="feature-box"><div class="feature-num">16</div><div class="feature-label">性格类型</div></div>
+                    <div class="feature-box"><div class="feature-num">10</div><div class="feature-label">分钟完成</div></div>
                 </div>
-                <button class="btn" onclick="startTest()">开始测评</button>
+                <button class="btn" id="startBtn">开始测评</button>
             </div>
 
             <!-- Question -->
@@ -232,8 +177,8 @@
                 <div class="q-text" id="qText"></div>
                 <div class="opt-list" id="optList"></div>
                 <div class="nav-row">
-                    <button class="btn-nav" id="btnPrev" onclick="prevQ()" disabled>上一题</button>
-                    <button class="btn-nav btn-next" id="btnNext" onclick="nextQ()" disabled>下一题</button>
+                    <button class="btn-nav" id="btnPrev">上一题</button>
+                    <button class="btn-nav btn-next" id="btnNext" disabled>下一题</button>
                 </div>
             </div>
 
@@ -253,9 +198,7 @@
                     <div class="res-brief" id="resBrief"></div>
                 </div>
 
-                <div class="chart-wrap">
-                    <canvas id="radarChart"></canvas>
-                </div>
+                <div class="radar-wrap" id="radarWrap"></div>
 
                 <div class="score-row" id="scoreRow"></div>
 
@@ -269,8 +212,8 @@
                     <div class="trait-row" id="traitRow"></div>
                 </div>
 
-                <div class="reliability-box" id="reliabilityBox">
-                    <div class="reliability-title">测评信度分析<span class="reliability-score" id="reliabilityScore">高</span></div>
+                <div class="reliability-box">
+                    <div class="reliability-title">测评信度分析<span class="reliability-score" id="reliabilityScore">很高</span></div>
                     <div class="reliability-desc" id="reliabilityDesc"></div>
                 </div>
 
@@ -280,721 +223,324 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn-ghost" onclick="restartTest()">重新测评</button>
-                    <button class="btn" onclick="shareResult()">复制结果</button>
+                    <button class="btn-ghost" id="restartBtn">重新测评</button>
+                    <button class="btn" id="shareBtn">复制结果</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // 48 questions across 4 dimensions, with reverse-coded items for consistency check
-        const questions = [
-            // === E-I Dimension (12 questions) ===
-            { text: "在社交聚会中，您通常会：", dim: "E-I", dir: "E",
-              opts: [
-                { t: "主动与新认识的人交谈，拓展人脉", s: 3 },
-                { t: "与熟悉的朋友聊天，不太主动搭讪陌生人", s: 0 }
-              ]
-            },
-            { text: "独处一段时间后，您会感到：", dim: "E-I", dir: "I",
-              opts: [
-                { t: "精力恢复，期待与他人分享经历", s: 0 },
-                { t: "需要继续独处来整理思绪", s: 3 }
-              ]
-            },
-            { text: "您更愿意通过以下方式获取能量：", dim: "E-I", dir: "E",
-              opts: [
-                { t: "与他人讨论、头脑风暴", s: 3 },
-                { t: "独自阅读、思考或散步", s: 0 }
-              ]
-            },
-            { text: "当遇到问题时，您倾向于：", dim: "E-I", dir: "E",
-              opts: [
-                { t: "第一时间与他人商量解决方案", s: 3 },
-                { t: "先自己想清楚再与他人讨论", s: 0 }
-              ]
-            },
-            { text: "在工作中，您更喜欢：", dim: "E-I", dir: "I",
-              opts: [
-                { t: "有独立思考和完成工作的时间和空间", s: 3 },
-                { t: "与团队成员频繁沟通协作的环境", s: 0 }
-              ]
-            },
-            { text: "空闲时间，您更倾向于：", dim: "E-I", dir: "E",
-              opts: [
-                { t: "参加各种社交活动或聚会", s: 3 },
-                { t: "一个人待着，做自己喜欢的事", s: 0 }
-              ]
-            },
-            { text: "您在团队讨论中往往：", dim: "E-I", dir: "E",
-              opts: [
-                { t: "积极发言，分享自己的想法和观点", s: 3 },
-                { t: "先认真倾听，等想法成熟后再发言", s: 0 }
-              ]
-            },
-            { text: "当您需要做决定时：", dim: "E-I", dir: "I",
-              opts: [
-                { t: "与信任的人深入讨论后再决定", s: 0 },
-                { t: "自己安静思考后做出决定", s: 3 }
-              ]
-            },
-            { text: "您更喜欢的工作节奏是：", dim: "E-I", dir: "E",
-              opts: [
-                { t: "快节奏、高互动、多任务并行", s: 3 },
-                { t: "稳定有序、有足够时间专注思考", s: 0 }
-              ]
-            },
-            { text: "在陌生人面前，您通常：", dim: "E-I", dir: "I",
-              opts: [
-                { t: "很快能自然地与人交谈", s: 0 },
-                { t: "需要一些时间才能放开", s: 3 }
-              ]
-            },
-            { text: "您更享受哪种沟通方式？", dim: "E-I", dir: "E",
-              opts: [
-                { t: "面对面或电话沟通，能即时互动", s: 3 },
-                { t: "邮件或消息，有时间整理思路", s: 0 }
-              ]
-            },
-            { text: "参加活动时，您往往会：", dim: "E-I", dir: "I",
-              opts: [
-                { t: "主动约朋友一起去", s: 0 },
-                { t: "独自前往，到了再认识新朋友", s: 3 }
-              ]
-            },
+<script>
+var questions = [
+    { text: "在社交聚会中，您通常会：", dim: "E-I", dir: "E", opts: [{ t: "主动与新认识的人交谈，拓展人脉", s: 3 }, { t: "与熟悉的朋友聊天，不太主动搭讪陌生人", s: 0 }] },
+    { text: "独处一段时间后，您会感到：", dim: "E-I", dir: "I", opts: [{ t: "精力恢复，期待与他人分享经历", s: 0 }, { t: "需要继续独处来整理思绪", s: 3 }] },
+    { text: "您更愿意通过以下方式获取能量：", dim: "E-I", dir: "E", opts: [{ t: "与他人讨论、头脑风暴", s: 3 }, { t: "独自阅读、思考或散步", s: 0 }] },
+    { text: "当遇到问题时，您倾向于：", dim: "E-I", dir: "E", opts: [{ t: "第一时间与他人商量解决方案", s: 3 }, { t: "先自己想清楚再与他人讨论", s: 0 }] },
+    { text: "在工作中，您更喜欢：", dim: "E-I", dir: "I", opts: [{ t: "有独立思考和完成工作的时间和空间", s: 3 }, { t: "与团队成员频繁沟通协作的环境", s: 0 }] },
+    { text: "空闲时间，您更倾向于：", dim: "E-I", dir: "E", opts: [{ t: "参加各种社交活动或聚会", s: 3 }, { t: "一个人待着，做自己喜欢的事", s: 0 }] },
+    { text: "您在团队讨论中往往：", dim: "E-I", dir: "E", opts: [{ t: "积极发言，分享自己的想法和观点", s: 3 }, { t: "先认真倾听，等想法成熟后再发言", s: 0 }] },
+    { text: "当您需要做决定时：", dim: "E-I", dir: "I", opts: [{ t: "与信任的人深入讨论后再决定", s: 0 }, { t: "自己安静思考后做出决定", s: 3 }] },
+    { text: "您更喜欢的工作节奏是：", dim: "E-I", dir: "E", opts: [{ t: "快节奏、高互动、多任务并行", s: 3 }, { t: "稳定有序、有足够时间专注思考", s: 0 }] },
+    { text: "在陌生人面前，您通常：", dim: "E-I", dir: "I", opts: [{ t: "很快能自然地与人交谈", s: 0 }, { t: "需要一些时间才能放开", s: 3 }] },
+    { text: "您更享受哪种沟通方式？", dim: "E-I", dir: "E", opts: [{ t: "面对面或电话沟通，能即时互动", s: 3 }, { t: "邮件或消息，有时间整理思路", s: 0 }] },
+    { text: "参加活动时，您往往会：", dim: "E-I", dir: "I", opts: [{ t: "主动约朋友一起去", s: 0 }, { t: "独自前往，到了再认识新朋友", s: 3 }] },
+    { text: "您更关注事物的：", dim: "S-N", dir: "S", opts: [{ t: "具体的事实和可操作细节", s: 3 }, { t: "整体概念和未来可能性", s: 0 }] },
+    { text: "学习新技能时，您倾向于：", dim: "S-N", dir: "S", opts: [{ t: "从基础开始，循序渐进地掌握", s: 3 }, { t: "先了解整体框架，再深入细节", s: 0 }] },
+    { text: "您更喜欢哪种思维方式？", dim: "S-N", dir: "N", opts: [{ t: "抽象思维，善于发现规律和联系", s: 3 }, { t: "具体务实，一步一个脚印", s: 0 }] },
+    { text: "当阅读一本书时，您更在意：", dim: "S-N", dir: "S", opts: [{ t: "作者陈述的具体事实和案例", s: 3 }, { t: "作者想要传达的核心思想和隐喻", s: 0 }] },
+    { text: "解决工作中的问题，您会：", dim: "S-N", dir: "S", opts: [{ t: "依靠过去的经验和方法来应对", s: 3 }, { t: "尝试新的、创新的解决思路", s: 0 }] },
+    { text: "您对直觉的看法是：", dim: "S-N", dir: "N", opts: [{ t: "直觉有时比理性分析更准确", s: 3 }, { t: "决策应该基于事实和数据", s: 0 }] },
+    { text: "在规划未来时，您更倾向于：", dim: "S-N", dir: "S", opts: [{ t: "制定具体可执行的短期目标", s: 3 }, { t: "构思远大的理想和可能性", s: 0 }] },
+    { text: "您更容易被什么所吸引？", dim: "S-N", dir: "N", opts: [{ t: "新颖独特的想法和创意", s: 3 }, { t: "可靠稳定、经过验证的方案", s: 0 }] },
+    { text: "描述事件时，您习惯：", dim: "S-N", dir: "S", opts: [{ t: "详细讲述具体发生了什么", s: 3 }, { t: "分享自己对事件的感受和理解", s: 0 }] },
+    { text: "当有人向您倾诉烦恼时，您会：", dim: "S-N", dir: "S", opts: [{ t: "提供具体可行的解决方案", s: 3 }, { t: "理解并共情对方的情绪", s: 0 }] },
+    { text: "您更欣赏的品质是：", dim: "S-N", dir: "N", opts: [{ t: "想象力和创新思维", s: 3 }, { t: "踏实肯干和丰富经验", s: 0 }] },
+    { text: "面对选择时，您更容易：", dim: "S-N", dir: "S", opts: [{ t: "权衡利弊，选择最实际的选项", s: 3 }, { t: "相信直觉，选择最吸引自己的", s: 0 }] },
+    { text: "做决定时，您更依赖：", dim: "T-F", dir: "T", opts: [{ t: "逻辑分析和客观的利弊权衡", s: 3 }, { t: "个人价值观和他人的感受", s: 0 }] },
+    { text: "当他人取得成功时，您会：", dim: "T-F", dir: "T", opts: [{ t: "分析他成功的原因和可借鉴之处", s: 3 }, { t: "为朋友感到由衷的高兴和祝贺", s: 0 }] },
+    { text: "您认为什么更重要？", dim: "T-F", dir: "T", opts: [{ t: "公正公平，一视同仁", s: 3 }, { t: "因人而异，考虑特殊情况", s: 0 }] },
+    { text: "在争论中，您的立场通常是：", dim: "T-F", dir: "T", opts: [{ t: "坚持自己认为正确的观点", s: 3 }, { t: "理解对方的立场，寻求共识", s: 0 }] },
+    { text: "您更倾向于被他人评价为：", dim: "T-F", dir: "T", opts: [{ t: "理性、客观、有逻辑的", s: 3 }, { t: "温暖、善解人意、有同情心的", s: 0 }] },
+    { text: "当朋友向您请教问题时：", dim: "T-F", dir: "T", opts: [{ t: "给出最合理、最正确的建议", s: 3 }, { t: "考虑对方的感受，给予支持鼓励", s: 0 }] },
+    { text: "您更看重工作中的：", dim: "T-F", dir: "T", opts: [{ t: "能力、效率和成果", s: 3 }, { t: "人际关系、团队氛围", s: 0 }] },
+    { text: "当别人批评您的观点时：", dim: "T-F", dir: "T", opts: [{ t: "感谢对方的反馈，客观评估", s: 3 }, { t: "感到受伤，想办法调和", s: 0 }] },
+    { text: "您处理矛盾的方式是：", dim: "T-F", dir: "T", opts: [{ t: "就事论事，寻求最优解决方案", s: 3 }, { t: "考虑各方感受，维护关系和谐", s: 0 }] },
+    { text: "您对规则和制度的看法是：", dim: "T-F", dir: "T", opts: [{ t: "规则是必要的，能确保公平", s: 3 }, { t: "规则应该灵活，因情况而定", s: 0 }] },
+    { text: "评价一个人的时候，您更注重：", dim: "T-F", dir: "T", opts: [{ t: "他的能力和工作表现", s: 3 }, { t: "他的人品和道德修养", s: 0 }] },
+    { text: "当您需要拒绝别人时：", dim: "T-F", dir: "F", opts: [{ t: "直接说明原因，简洁明了", s: 0 }, { t: "尽量委婉表达，考虑对方感受", s: 3 }] },
+    { text: "您更喜欢的生活方式是：", dim: "J-P", dir: "J", opts: [{ t: "有计划、有规律、可以预见的", s: 3 }, { t: "灵活自由、随性而为之", s: 0 }] },
+    { text: "当收到一封邮件需要回复时：", dim: "J-P", dir: "J", opts: [{ t: "立即处理，尽快回复", s: 3 }, { t: "先放一放，等有整块时间再统一回复", s: 0 }] },
+    { text: "您更享受哪种状态？", dim: "J-P", dir: "P", opts: [{ t: "事情都在掌控之中的安全感", s: 0 }, { t: "充满未知可能性的新鲜感", s: 3 }] },
+    { text: "面对计划外的邀请时：", dim: "J-P", dir: "J", opts: [{ t: "提前安排的行程更重要，会婉拒", s: 3 }, { t: "愿意放下计划，接受新体验", s: 0 }] },
+    { text: "您的工作环境通常是：", dim: "J-P", dir: "J", opts: [{ t: "整洁有序，物品分类明确", s: 3 }, { t: "随手放置，需要时能快速找到", s: 0 }] },
+    { text: "做项目时，您更倾向于：", dim: "J-P", dir: "J", opts: [{ t: "制定详细计划，按部就班执行", s: 3 }, { t: "边做边调整，灵活应对变化", s: 0 }] },
+    { text: "您对变化的态度是：", dim: "J-P", dir: "P", opts: [{ t: "变化是正常的，学会适应就好", s: 3 }, { t: "应该尽量做好规划，减少变化", s: 0 }] },
+    { text: "约会时，您通常会：", dim: "J-P", dir: "J", opts: [{ t: "提前做好安排和攻略", s: 3 }, { t: "随性而行，到时再说", s: 0 }] },
+    { text: "您更欣赏的品质是：", dim: "J-P", dir: "J", opts: [{ t: "可靠、准时、有责任心", s: 3 }, { t: "灵活、开放、富有创意", s: 0 }] },
+    { text: "当被要求立即做决定时：", dim: "J-P", dir: "J", opts: [{ t: "快速权衡，做出明确决定", s: 3 }, { t: "需要更多时间思考，不太确定", s: 0 }] },
+    { text: "您对deadline的态度是：", dim: "J-P", dir: "J", opts: [{ t: "提前完成，避免意外", s: 3 }, { t: "最后时刻冲刺，效率更高", s: 0 }] },
+    { text: "日常生活中的您：", dim: "J-P", dir: "P", opts: [{ t: "喜欢把东西放在固定的位置", s: 0 }, { t: "喜欢随时改变，保持新鲜感", s: 3 }] }
+];
 
-            // === S-N Dimension (12 questions) ===
-            { text: "您更关注事物的：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "具体的事实和可操作细节", s: 3 },
-                { t: "整体概念和未来可能性", s: 0 }
-              ]
-            },
-            { text: "学习新技能时，您倾向于：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "从基础开始，循序渐进地掌握", s: 3 },
-                { t: "先了解整体框架，再深入细节", s: 0 }
-              ]
-            },
-            { text: "您更喜欢哪种思维方式？", dim: "S-N", dir: "N",
-              opts: [
-                { t: "抽象思维，善于发现规律和联系", s: 3 },
-                { t: "具体务实，一步一个脚印", s: 0 }
-              ]
-            },
-            { text: "当阅读一本书时，您更在意：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "作者陈述的具体事实和案例", s: 3 },
-                { t: "作者想要传达的核心思想和隐喻", s: 0 }
-              ]
-            },
-            { text: "解决工作中的问题，您会：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "依靠过去的经验和方法来应对", s: 3 },
-                { t: "尝试新的、创新的解决思路", s: 0 }
-              ]
-            },
-            { text: "您对'第六感'的看法是：", dim: "S-N", dir: "N",
-              opts: [
-                { t: "直觉有时比理性分析更准确", s: 3 },
-                { t: "决策应该基于事实和数据", s: 0 }
-              ]
-            },
-            { text: "在规划未来时，您更倾向于：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "制定具体可执行的短期目标", s: 3 },
-                { t: "构思远大的理想和可能性", s: 0 }
-              ]
-            },
-            { text: "您更容易被什么所吸引？", dim: "S-N", dir: "N",
-              opts: [
-                { t: "新颖独特的想法和创意", s: 3 },
-                { t: "可靠稳定、经过验证的方案", s: 0 }
-              ]
-            },
-            { text: "描述事件时，您习惯：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "详细讲述具体发生了什么", s: 3 },
-                { t: "分享自己对事件的感受和理解", s: 0 }
-              ]
-            },
-            { text: "当有人向您倾诉烦恼时，您会：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "提供具体可行的解决方案", s: 3 },
-                { t: "理解并共情对方的情绪", s: 0 }
-              ]
-            },
-            { text: "您更欣赏的品质是：", dim: "S-N", dir: "N",
-              opts: [
-                { t: "想象力和创新思维", s: 3 },
-                { t: "踏实肯干和丰富经验", s: 0 }
-              ]
-            },
-            { text: "面对选择时，您更容易：", dim: "S-N", dir: "S",
-              opts: [
-                { t: "权衡利弊，选择最实际的选项", s: 3 },
-                { t: "相信直觉，选择最吸引自己的", s: 0 }
-              ]
-            },
+var types = {
+    "INTJ": { name: "建筑师", brief: "战略型思想家，拥有敏锐的洞察力和独立的判断力。善于从全局角度规划未来，对知识和智慧有强烈渴求，是天生的策划者。", careers: ["战略顾问", "建筑师", "数据科学家", "大学教授", "软件架构师", "投资分析师", "知识产权律师", "企业策划"], traits: ["战略思维", "独立自主", "追求卓越", "逻辑清晰", "批判精神", "远见卓识"], advice: [{ icon: "💡", text: "您的分析能力和战略眼光是稀缺的领导力特质。建议将您的洞察力转化为具体的行动计划，影响组织和行业的变革。" }, { icon: "🤝", text: "学会欣赏他人的贡献和情感需求。适当放权，让他人在您的愿景中找到自己的位置。" }, { icon: "🎯", text: "在追求高标准时，给自己和他人留有一些犯错和成长的空间，这对长远发展至关重要。" }] },
+    "INTP": { name: "逻辑学家", brief: "抽象思考者，天生对知识和真理充满好奇。思维敏捷，善于分析复杂问题，追求精确和理性的生活方式。", careers: ["哲学家", "研究员", "软件工程师", "经济学家", "法律研究员", "大学教授", "数据分析师", "系统架构师"], traits: ["逻辑思维", "求知欲强", "创新精神", "分析能力", "思想独立", "客观理性"], advice: [{ icon: "🔧", text: "您的想法需要落地。建议选择一个领域深耕，将您的洞察力转化为实际成果，而不仅仅停留在理论层面。" }, { icon: "💬", text: "社交能力是您需要刻意培养的软技能。主动参与讨论、分享您的想法，建立有价值的人际网络。" }, { icon: "⚡", text: "克服拖延症的最佳方式是设定具体的短期目标和截止日期，并对自己负责。" }] },
+    "ENTJ": { name: "指挥官", brief: "天生领导者，具有强大的气场和决断力。善于制定战略目标，激励团队前进，是改变世界的推动者。", careers: ["企业高管", "律师", "管理咨询师", "创业者", "投资银行家", "政治家", "销售总监", "项目经理"], traits: ["领导力强", "决策果断", "自信坚定", "战略眼光", "执行力强", "充满正能量"], advice: [{ icon: "👥", text: "您的领导力很强，但要注意倾听团队成员的声音。真正的领导者是让每个人发挥最大潜能，而不仅仅是发号施令。" }, { icon: "❤️", text: "学会关注他人的情感需求，而不仅仅是任务和目标。人文关怀不会削弱您的领导力，反而会让您更有影响力。" }, { icon: "🧘", text: "适当放慢脚步，给自己和团队留出思考和调整的时间。冲动决策有时会带来不必要的风险。" }] },
+    "ENTP": { name: "辩论家", brief: "创意无限的发明家，善于发现问题的创新解决方案。思维活跃，喜欢挑战权威，享受智识上的刺激和辩论。", careers: ["创业者", "律师", "营销策划", "产品经理", "公关专家", "投资人", "记者", "管理咨询"], traits: ["创新思维", "善于辩论", "适应力强", "思维敏捷", "魅力出众", "乐观开朗"], advice: [{ icon: "🎯", text: "您的多才多艺是优势，但也容易导致分散投入。建议选择一个方向深耕，建立核心竞争力。" }, { icon: "🔨", text: "好点子需要落地才能产生价值。学会坚持完成一个项目，而不仅仅是享受开始的兴奋感。" }, { icon: "💡", text: "在辩论中多关注对事物的理解而非输赢，真正的智慧在于知道何时该退一步。" }] },
+    "INFJ": { name: "提倡者", brief: "理想主义的守护者，有着深刻的人生洞察力。追求有意义的生活，致力于帮助他人成长和实现潜能。", careers: ["心理咨询师", "社会工作者", "作家", "人力资源经理", "非营利组织管理", "教师", "宗教工作者", "职业顾问"], traits: ["同理心强", "理想主义", "创造力", "洞察力深刻", "有感染力", "坚持原则"], advice: [{ icon: "🌱", text: "您对他人需求的洞察是宝贵的，但要注意照顾好自己。设立健康的边界，避免过度消耗。" }, { icon: "🎯", text: "您的理想需要务实的支撑。学会制定可衡量的目标，将愿景转化为具体的行动计划。" }, { icon: "💬", text: "勇敢表达自己的需求和想法，您的声音值得被听见。适度的自我主张不会损害您的人际关系。" }] },
+    "INFP": { name: "调停者", brief: "浪漫的理想主义者，内心世界丰富而独特。重视真实和独特性，追求有意义、有价值的人生。", careers: ["作家", "艺术家", "心理咨询师", "翻译", "社会学家", "音乐家", "平面设计师", "人力资源专员"], traits: ["创造力强", "同理心", "适应力", "价值观清晰", "善于倾听", "理想主义"], advice: [{ icon: "🚀", text: "您有丰富的内心世界和创意天赋。将您的想法转化为实际行动是成长的关键一步。" }, { icon: "🎯", text: "面对冲突和批评时，试着把它当作反馈而不是否定。您比自己想象的更有韧性。" }, { icon: "🌍", text: "世界需要您独特的视角。勇敢地表达自己，您的故事和想法能够启发他人。" }] },
+    "ENFJ": { name: "主人公", brief: "富有感召力的领导者，天生具有激励他人成长的能力。热情洋溢，关注他人的潜能开发和价值实现。", careers: ["人力资源经理", "培训师", "政治家", "心理咨询师", "作家", "演员", "社会工作者", "企业教练"], traits: ["感染力强", "领导力", "同理心", "沟通能力", "有魅力", "理想主义"], advice: [{ icon: "🛡️", text: "您的关怀有时会被他人利用。学会辨别真正值得付出的人，而不是试图拯救每一个人。" }, { icon: "🎯", text: "在帮助他人的同时，明确自己的优先事项和界限。自我照顾不是自私，而是可持续助人的基础。" }, { icon: "💪", text: "您很容易在意他人的评价。学会基于自己的价值观做决定，而不是寻求每个人的认可。" }] },
+    "ENFP": { name: "竞选者", brief: "自由奔放的探险家，热情且富有创意。能点燃周围人的激情，享受独特而有意义的人生体验。", careers: ["营销策划", "记者", "演员", "设计师", "创业者", "心理咨询师", "旅游博主", "活动策划"], traits: ["热情洋溢", "创新能力强", "沟通能力", "适应力", "富有魅力", "积极乐观"], advice: [{ icon: "🎯", text: "您的热情和创意需要聚焦。选择几个核心目标深耕，而不是同时追逐太多可能性。" }, { icon: "🔨", text: "行动力是您最大的成长点。将灵感记录下来，并设定具体的截止日期来推动执行。" }, { icon: "💡", text: "学会享受独处和内省的时刻，这能帮助您更好地理解自己和内心的真实需求。" }] },
+    "ISTJ": { name: "物流师", brief: "务实可靠的实际主义者，注重承诺和责任。做事有条不紊，是团队和组织的稳定支柱。", careers: ["审计师", "会计", "律师", "行政经理", "金融分析师", "工程师", "质量监管", "数据管理员"], traits: ["责任感强", "可靠务实", "注重细节", "执行力强", "忠诚稳定", "有条理"], advice: [{ icon: "🔄", text: "您对传统的坚持是优点，但也要学会接受合理的改变。灵活不是放弃原则，而是更好地实现目标。" }, { icon: "💬", text: "您的付出和贡献需要被看见。学会适时展示自己的工作成果，让他人的认可成为动力。" }, { icon: "❤️", text: "工作不只是完成任务。试着关注同事的情感需求，建立更深层次的人际关系。" }] },
+    "ISFJ": { name: "守卫者", brief: "温暖忠诚的守护者，默默付出而不求回报。重视传统和责任，是他人值得信赖的依靠。", careers: ["护士", "人力资源专员", "行政助理", "图书管理员", "社会工作者", "教师", "美容师", "营养师"], traits: ["忠诚可靠", "无私奉献", "注重细节", "善于记忆", "温暖体贴", "有耐心"], advice: [{ icon: "🗣️", text: "学会表达自己的感受和需求。您的沉默有时会被误解为不需要帮助，而您其实也需要被关心。" }, { icon: "🚫", text: "您需要学会说'不'。当超出能力范围时，坦诚的拒绝比勉强完成更有益于关系。" }, { icon: "🌱", text: "您对批评过于敏感，试着把它当作成长的机会，而不是对个人的否定。" }] },
+    "ESTJ": { name: "总经理", brief: "务实高效的管理者，注重组织和效率。遵守传统和规则，是团队的可靠支柱和决策者。", careers: ["项目经理", "企业高管", "军官", "法官", "房地产经纪人", "保险经纪人", "酒店经理", "物流经理"], traits: ["执行力强", "组织能力", "责任感", "务实", "决策果断", "注重规则"], advice: [{ icon: "👂", text: "您的果断是优势，但也要倾听不同的声音。有时候最不被看好的意见反而最有价值。" }, { icon: "💭", text: "学会欣赏不同的做事方式，不一定非要用您的标准来衡量一切。" }, { icon: "❤️", text: "在追求效率和结果的同时，关注团队成员的情感需求，这会让您成为更受尊敬的领导者。" }] },
+    "ESFJ": { name: "供给者", brief: "热情好客的社交达人，关注他人的需求和感受。善于营造和谐的人际关系，是团队的粘合剂。", careers: ["护士", "教师", "人力资源专员", "客户服务经理", "旅游顾问", "美容师", "社工", "地产销售"], traits: ["社交能力强", "善解人意", "有责任感", "善于协调", "热情助人", "注重关系"], advice: [{ icon: "🛡️", text: "您习惯取悦他人，但要注意识别那些只会索取的人。真正的友谊是双向的。" }, { icon: "💪", text: "学会接受建设性的批评，它不会削弱您的人缘，反而会让您更值得尊敬。" }, { icon: "🎯", text: "在帮助他人的同时，也要为自己设立目标。您的价值不只是体现在他人的需求里。" }] },
+    "ISTP": { name: "鉴赏家", brief: "冷静务实的动手者，喜欢探索事物运作原理。善于解决具体问题，享受动手操作的满足感。", careers: ["工程师", "机械师", "飞行员", "厨师", "程序员", "运动员", "军警", "技术员"], traits: ["动手能力强", "逻辑分析", "适应力", "冷静沉着", "善于解决问题", "务实"], advice: [{ icon: "💬", text: "您的动手能力和技术天赋是宝贵资产，但需要让他人知道您的价值。适度展示成果和想法。" }, { icon: "❤️", text: "您倾向于独自承担一切。学会向他人寻求帮助，这不会削弱您的独立性。" }, { icon: "🌱", text: "情感表达是您需要刻意培养的能力。试着多与他人分享内心的感受，而不仅仅是解决问题的方案。" }] },
+    "ISFP": { name: "探险家", brief: "自由浪漫的艺术灵魂，享受当下的美好时刻。对美有独特感知，是温柔的理想主义者和行动者。", careers: ["艺术家", "设计师", "摄影师", "厨师", "园艺师", "音乐家", "插画师", "造型师"], traits: ["艺术气质", "观察力敏锐", "适应力", "温柔体贴", "追求美感", "活在当下"], advice: [{ icon: "🎯", text: "您的艺术天赋和对美的追求是独特礼物。将热情转化为持续的行动力，能让您走得更远。" }, { icon: "💪", text: "面对困难时不要习惯性地逃避。您比想象中更有韧性，只是需要给机会让自己证明。" }, { icon: "🗣️", text: "学会在需要时表达自己的需求和感受，而不仅仅是通过艺术作品来表达。" }] },
+    "ESTP": { name: "企业家", brief: "充满活力的行动派，喜欢冒险和即时挑战。天生的谈判高手，善于抓住机会并快速行动。", careers: ["创业者", "销售经理", "房地产经纪人", "导游", "急诊医生", "运动员", "投资人", "活动主持"], traits: ["行动力强", "善于谈判", "适应力", "务实", "魅力出众", "善于抓住机会"], advice: [{ icon: "🎯", text: "您的冒险精神和行动力是成功的关键，但要学会在行动前做适当的风险评估。" }, { icon: "⏰", text: "多考虑长期后果而非仅仅追求短期利益。提前规划能为未来创造更多可能性。" }, { icon: "💭", text: "培养深度思考的能力。适度放慢脚步思考战略，不会削弱您的行动优势。" }] },
+    "ESFP": { name: "表演者", brief: "活泼开朗的社交明星，享受成为关注的焦点。富有感染力，能让周围的人感到快乐和活力。", careers: ["演员", "主持人", "销售代表", "活动策划", "摄影师", "教师", "导游", "美容师"], traits: ["感染力强", "社交能力强", "富有魅力", "乐观开朗", "富有表现力", "活在当下"], advice: [{ icon: "🎯", text: "您的热情和活力让他人喜欢接近，但要注意培养深度专注的能力。" }, { icon: "💡", text: "学会独处和自我反思，这对您的个人成长和深度思考至关重要。" }, { icon: "💪", text: "克服冲动消费和即兴决定的习惯，设定长期目标并为未来储蓄和投资。" }] }
+};
 
-            // === T-F Dimension (12 questions) ===
-            { text: "做决定时，您更依赖：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "逻辑分析和客观的利弊权衡", s: 3 },
-                { t: "个人价值观和他人的感受", s: 0 }
-              ]
-            },
-            { text: "当他人取得成功时，您会：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "分析他成功的原因和可借鉴之处", s: 3 },
-                { t: "为朋友感到由衷的高兴和祝贺", s: 0 }
-              ]
-            },
-            { text: "您认为什么更重要？", dim: "T-F", dir: "T",
-              opts: [
-                { t: "公正公平，一视同仁", s: 3 },
-                { t: "因人而异，考虑特殊情况", s: 0 }
-              ]
-            },
-            { text: "在争论中，您的立场通常是：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "坚持自己认为正确的观点", s: 3 },
-                { t: "理解对方的立场，寻求共识", s: 0 }
-              ]
-            },
-            { text: "您更倾向于被他人评价为：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "理性、客观、有逻辑的", s: 3 },
-                { t: "温暖、善解人意、有同情心的", s: 0 }
-              ]
-            },
-            { text: "当朋友向您请教问题时：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "给出最合理、最正确的建议", s: 3 },
-                { t: "考虑对方的感受，给予支持鼓励", s: 0 }
-              ]
-            },
-            { text: "您更看重工作中的：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "能力、效率和成果", s: 3 },
-                { t: "人际关系、团队氛围", s: 0 }
-              ]
-            },
-            { text: "当别人批评您的观点时：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "感谢对方的反馈，客观评估", s: 3 },
-                { t: "感到受伤，想办法调和", s: 0 }
-              ]
-            },
-            { text: "您处理矛盾的方式是：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "就事论事，寻求最优解决方案", s: 3 },
-                { t: "考虑各方感受，维护关系和谐", s: 0 }
-              ]
-            },
-            { text: "您对规则和制度的看法是：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "规则是必要的，能确保公平", s: 3 },
-                { t: "规则应该灵活，因情况而定", s: 0 }
-              ]
-            },
-            { text: "评价一个人的时候，您更注重：", dim: "T-F", dir: "T",
-              opts: [
-                { t: "他的能力和工作表现", s: 3 },
-                { t: "他的人品和道德修养", s: 0 }
-              ]
-            },
-            { text: "当您需要拒绝别人时：", dim: "T-F", dir: "F",
-              opts: [
-                { t: "直接说明原因，简洁明了", s: 0 },
-                { t: "尽量委婉表达，考虑对方感受", s: 3 }
-              ]
-            },
+var current = 0;
+var answers = {};
+var raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
 
-            // === J-P Dimension (12 questions) ===
-            { text: "您更喜欢的生活方式是：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "有计划、有规律、可以预见的", s: 3 },
-                { t: "灵活自由、随性而为之", s: 0 }
-              ]
-            },
-            { text: "当收到一封邮件需要回复时：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "立即处理，尽快回复", s: 3 },
-                { t: "先放一放，等有整块时间再统一回复", s: 0 }
-              ]
-            },
-            { text: "您更享受哪种状态？", dim: "J-P", dir: "P",
-              opts: [
-                { t: "事情都在掌控之中的安全感", s: 0 },
-                { t: "充满未知可能性的新鲜感", s: 3 }
-              ]
-            },
-            { text: "面对计划外的邀请时：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "提前安排的行程更重要，会婉拒", s: 3 },
-                { t: "愿意放下计划，接受新体验", s: 0 }
-              ]
-            },
-            { text: "您的工作环境通常是：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "整洁有序，物品分类明确", s: 3 },
-                { t: "随手放置，需要时能快速找到", s: 0 }
-              ]
-            },
-            { text: "做项目时，您更倾向于：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "制定详细计划，按部就班执行", s: 3 },
-                { t: "边做边调整，灵活应对变化", s: 0 }
-              ]
-            },
-            { text: "您对'计划赶不上变化'的态度是：", dim: "J-P", dir: "P",
-              opts: [
-                { t: "变化是正常的，学会适应就好", s: 3 },
-                { t: "应该尽量做好规划，减少变化", s: 0 }
-              ]
-            },
-            { text: "约会时，您通常会：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "提前做好安排和攻略", s: 3 },
-                { t: "随性而行，到时再说", s: 0 }
-              ]
-            },
-            { text: "您更欣赏的品质是：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "可靠、准时、有责任心", s: 3 },
-                { t: "灵活、开放、富有创意", s: 0 }
-              ]
-            },
-            { text: "当被要求立即做决定时：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "快速权衡，做出明确决定", s: 3 },
-                { t: "需要更多时间思考，不太确定", s: 0 }
-              ]
-            },
-            { text: "您对deadline的态度是：", dim: "J-P", dir: "J",
-              opts: [
-                { t: "提前完成，避免意外", s: 3 },
-                { t: "最后时刻冲刺，效率更高", s: 0 }
-              ]
-            },
-            { text: "日常生活中的您：", dim: "J-P", dir: "P",
-              opts: [
-                { t: "喜欢把东西放在固定的位置", s: 0 },
-                { t: "喜欢随时改变，保持新鲜感", s: 3 }
-              ]
-            }
-        ];
+// Particles
+(function() {
+    var c = document.getElementById('particles');
+    for (var i = 0; i < 25; i++) {
+        var p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 20 + 's';
+        p.style.animationDuration = (18 + Math.random() * 12) + 's';
+        c.appendChild(p);
+    }
+})();
 
-        // SBTI Types Database
-        const types = {
-            "INTJ": { name: "建筑师", brief: "战略型思想家，拥有敏锐的洞察力和独立的判断力。善于从全局角度规划未来，对知识和智慧有强烈渴求，是天生的策划者。",
-                careers: ["战略顾问", "建筑师", "数据科学家", "大学教授", "软件架构师", "投资分析师", "知识产权律师", "企业策划"],
-                traits: ["战略思维", "独立自主", "追求卓越", "逻辑清晰", "批判精神", "远见卓识"],
-                advice: [
-                    { icon: "💡", text: "您的分析能力和战略眼光是稀缺的领导力特质。建议将您的洞察力转化为具体的行动计划，影响组织和行业的变革。" },
-                    { icon: "🤝", text: "学会欣赏他人的贡献和情感需求。适当放权，让他人在您的愿景中找到自己的位置。" },
-                    { icon: "🎯", text: "在追求高标准时，给自己和他人留有一些犯错和成长的空间，这对长远发展至关重要。" }
-                ]
-            },
-            "INTP": { name: "逻辑学家", brief: "抽象思考者，天生对知识和真理充满好奇。思维敏捷，善于分析复杂问题，追求精确和理性的生活方式。",
-                careers: ["哲学家", "研究员", "软件工程师", "经济学家", "法律研究员", "大学教授", "数据分析师", "系统架构师"],
-                traits: ["逻辑思维", "求知欲强", "创新精神", "分析能力", "思想独立", "客观理性"],
-                advice: [
-                    { icon: "🔧", text: "您的想法需要落地。建议选择一个领域深耕，将您的洞察力转化为实际成果，而不仅仅停留在理论层面。" },
-                    { icon: "💬", text: "社交能力是您需要刻意培养的软技能。主动参与讨论、分享您的想法，建立有价值的人际网络。" },
-                    { icon: "⚡", text: "克服拖延症的最佳方式是设定具体的短期目标和截止日期，并对自己负责。" }
-                ]
-            },
-            "ENTJ": { name: "指挥官", brief: "天生领导者，具有强大的气场和决断力。善于制定战略目标，激励团队前进，是改变世界的推动者。",
-                careers: ["企业高管", "律师", "管理咨询师", "创业者", "投资银行家", "政治家", "销售总监", "项目经理"],
-                traits: ["领导力强", "决策果断", "自信坚定", "战略眼光", "执行力强", "充满正能量"],
-                advice: [
-                    { icon: "👥", text: "您的领导力很强，但要注意倾听团队成员的声音。真正的领导者是让每个人发挥最大潜能，而不仅仅是发号施令。" },
-                    { icon: "❤️", text: "学会关注他人的情感需求，而不仅仅是任务和目标。人文关怀不会削弱您的领导力，反而会让您更有影响力。" },
-                    { icon: "🧘", text: "适当放慢脚步，给自己和团队留出思考和调整的时间。冲动决策有时会带来不必要的风险。" }
-                ]
-            },
-            "ENTP": { name: "辩论家", brief: "创意无限的发明家，善于发现问题的创新解决方案。思维活跃，喜欢挑战权威，享受智识上的刺激和辩论。",
-                careers: ["创业者", "律师", "营销策划", "产品经理", "公关专家", "投资人", "记者", "管理咨询"],
-                traits: ["创新思维", "善于辩论", "适应力强", "思维敏捷", "魅力出众", "乐观开朗"],
-                advice: [
-                    { icon: "🎯", text: "您的多才多艺是优势，但也容易导致分散投入。建议选择一个方向深耕，建立核心竞争力。" },
-                    { icon: "🔨", text: "好点子需要落地才能产生价值。学会坚持完成一个项目，而不仅仅是享受开始的兴奋感。" },
-                    { icon: "💡", text: "在辩论中多关注对事物的理解而非输赢，真正的智慧在于知道何时该退一步。" }
-                ]
-            },
-            "INFJ": { name: "提倡者", brief: "理想主义的守护者，有着深刻的人生洞察力。追求有意义的生活，致力于帮助他人成长和实现潜能。",
-                careers: ["心理咨询师", "社会工作者", "作家", "人力资源经理", "非营利组织管理", "教师", "宗教工作者", "职业顾问"],
-                traits: ["同理心强", "理想主义", "创造力", "洞察力深刻", "有感染力", "坚持原则"],
-                advice: [
-                    { icon: "🌱", text: "您对他人需求的洞察是宝贵的，但要注意照顾好自己。设立健康的边界，避免过度消耗。" },
-                    { icon: "🎯", text: "您的理想需要务实的支撑。学会制定可衡量的目标，将愿景转化为具体的行动计划。" },
-                    { icon: "💬", text: "勇敢表达自己的需求和想法，您的声音值得被听见。适度的自我主张不会损害您的人际关系。" }
-                ]
-            },
-            "INFP": { name: "调停者", brief: "浪漫的理想主义者，内心世界丰富而独特。重视真实和独特性，追求有意义、有价值的人生。",
-                careers: ["作家", "艺术家", "心理咨询师", "翻译", "社会学家", "音乐家", "平面设计师", "人力资源专员"],
-                traits: ["创造力强", "同理心", "适应力", "价值观清晰", "善于倾听", "理想主义"],
-                advice: [
-                    { icon: "🚀", text: "您有丰富的内心世界和创意天赋。将您的想法转化为实际行动是成长的关键一步。" },
-                    { icon: "🎯", text: "面对冲突和批评时，试着把它当作反馈而不是否定。您比自己想象的更有韧性。" },
-                    { icon: "🌍", text: "世界需要您独特的视角。勇敢地表达自己，您的故事和想法能够启发他人。" }
-                ]
-            },
-            "ENFJ": { name: "主人公", brief: "富有感召力的领导者，天生具有激励他人成长的能力。热情洋溢，关注他人的潜能开发和价值实现。",
-                careers: ["人力资源经理", "培训师", "政治家", "心理咨询师", "作家", "演员", "社会工作者", "企业教练"],
-                traits: ["感染力强", "领导力", "同理心", "沟通能力", "有魅力", "理想主义"],
-                advice: [
-                    { icon: "🛡️", text: "您的关怀有时会被他人利用。学会辨别真正值得付出的人，而不是试图拯救每一个人。" },
-                    { icon: "🎯", text: "在帮助他人的同时，明确自己的优先事项和界限。自我照顾不是自私，而是可持续助人的基础。" },
-                    { icon: "💪", text: "您很容易在意他人的评价。学会基于自己的价值观做决定，而不是寻求每个人的认可。" }
-                ]
-            },
-            "ENFP": { name: "竞选者", brief: "自由奔放的探险家，热情且富有创意。能点燃周围人的激情，享受独特而有意义的人生体验。",
-                careers: ["营销策划", "记者", "演员", "设计师", "创业者", "心理咨询师", "旅游博主", "活动策划"],
-                traits: ["热情洋溢", "创新能力强", "沟通能力", "适应力", "富有魅力", "积极乐观"],
-                advice: [
-                    { icon: "🎯", text: "您的热情和创意需要聚焦。选择几个核心目标深耕，而不是同时追逐太多可能性。" },
-                    { icon: "🔨", text: "行动力是您最大的成长点。将灵感记录下来，并设定具体的截止日期来推动执行。" },
-                    { icon: "💡", text: "学会享受独处和内省的时刻，这能帮助您更好地理解自己和内心的真实需求。" }
-                ]
-            },
-            "ISTJ": { name: "物流师", brief: "务实可靠的实际主义者，注重承诺和责任。做事有条不紊，是团队和组织的稳定支柱。",
-                careers: ["审计师", "会计", "律师", "行政经理", "金融分析师", "工程师", "质量监管", "数据管理员"],
-                traits: ["责任感强", "可靠务实", "注重细节", "执行力强", "忠诚稳定", "有条理"],
-                advice: [
-                    { icon: "🔄", text: "您对传统的坚持是优点，但也要学会接受合理的改变。灵活不是放弃原则，而是更好地实现目标。" },
-                    { icon: "💬", text: "您的付出和贡献需要被看见。学会适时展示自己的工作成果，让他人的认可成为动力。" },
-                    { icon: "❤️", text: "工作不只是完成任务。试着关注同事的情感需求，建立更深层次的人际关系。" }
-                ]
-            },
-            "ISFJ": { name: "守卫者", brief: "温暖忠诚的守护者，默默付出而不求回报。重视传统和责任，是他人值得信赖的依靠。",
-                careers: ["护士", "人力资源专员", "行政助理", "图书管理员", "社会工作者", "教师", "美容师", "营养师"],
-                traits: ["忠诚可靠", "无私奉献", "注重细节", "善于记忆", "温暖体贴", "有耐心"],
-                advice: [
-                    { icon: "🗣️", text: "学会表达自己的感受和需求。您的沉默有时会被误解为不需要帮助，而您其实也需要被关心。" },
-                    { icon: "🚫", text: "您需要学会说\"不\"。当超出能力范围时，坦诚的拒绝比勉强完成更有益于关系。" },
-                    { icon: "🌱", text: "您对批评过于敏感，试着把它当作成长的机会，而不是对个人的否定。" }
-                ]
-            },
-            "ESTJ": { name: "总经理", brief: "务实高效的管理者，注重组织和效率。遵守传统和规则，是团队的可靠支柱和决策者。",
-                careers: ["项目经理", "企业高管", "军官", "法官", "房地产经纪人", "保险经纪人", "酒店经理", "物流经理"],
-                traits: ["执行力强", "组织能力", "责任感", "务实", "决策果断", "注重规则"],
-                advice: [
-                    { icon: "👂", text: "您的果断是优势，但也要倾听不同的声音。有时候最不被看好的意见反而最有价值。" },
-                    { icon: "💭", text: "学会欣赏不同的做事方式，不一定非要用您的标准来衡量一切。" },
-                    { icon: "❤️", text: "在追求效率和结果的同时，关注团队成员的情感需求，这会让您成为更受尊敬的领导者。" }
-                ]
-            },
-            "ESFJ": { name: "供给者", brief: "热情好客的社交达人，关注他人的需求和感受。善于营造和谐的人际关系，是团队的粘合剂。",
-                careers: ["护士", "教师", "人力资源专员", "客户服务经理", "旅游顾问", "美容师", "社工", "地产销售"],
-                traits: ["社交能力强", "善解人意", "有责任感", "善于协调", "热情助人", "注重关系"],
-                advice: [
-                    { icon: "🛡️", text: "您习惯取悦他人，但要注意识别那些只会索取的人。真正的友谊是双向的。" },
-                    { icon: "💪", text: "学会接受建设性的批评，它不会削弱您的人缘，反而会让您更值得尊敬。" },
-                    { icon: "🎯", text: "在帮助他人的同时，也要为自己设立目标。您的价值不只是体现在他人的需求里。" }
-                ]
-            },
-            "ISTP": { name: "鉴赏家", brief: "冷静务实的动手者，喜欢探索事物运作原理。善于解决具体问题，享受动手操作的满足感。",
-                careers: ["工程师", "机械师", "飞行员", "厨师", "程序员", "运动员", "军警", "技术员"],
-                traits: ["动手能力强", "逻辑分析", "适应力", "冷静沉着", "善于解决问题", "务实"],
-                advice: [
-                    { icon: "💬", text: "您的动手能力和技术天赋是宝贵资产，但需要让他人知道您的价值。适度展示成果和想法。" },
-                    { icon: "❤️", text: "您倾向于独自承担一切。学会向他人寻求帮助，这不会削弱您的独立性。" },
-                    { icon: "🌱", text: "情感表达是您需要刻意培养的能力。试着多与他人分享内心的感受，而不仅仅是解决问题的方案。" }
-                ]
-            },
-            "ISFP": { name: "探险家", brief: "自由浪漫的艺术灵魂，享受当下的美好时刻。对美有独特感知，是温柔的理想主义者和行动者。",
-                careers: ["艺术家", "设计师", "摄影师", "厨师", "园艺师", "音乐家", "插画师", "造型师"],
-                traits: ["艺术气质", "观察力敏锐", "适应力", "温柔体贴", "追求美感", "活在当下"],
-                advice: [
-                    { icon: "🎯", text: "您的艺术天赋和对美的追求是独特礼物。将热情转化为持续的行动力，能让您走得更远。" },
-                    { icon: "💪", text: "面对困难时不要习惯性地逃避。您比想象中更有韧性，只是需要给机会让自己证明。" },
-                    { icon: "🗣️", text: "学会在需要时表达自己的需求和感受，而不仅仅是通过艺术作品来表达。" }
-                ]
-            },
-            "ESTP": { name: "企业家", brief: "充满活力的行动派，喜欢冒险和即时挑战。天生的谈判高手，善于抓住机会并快速行动。",
-                careers: ["创业者", "销售经理", "房地产经纪人", "导游", "急诊医生", "运动员", "投资人", "活动主持"],
-                traits: ["行动力强", "善于谈判", "适应力", "务实", "魅力出众", "善于抓住机会"],
-                advice: [
-                    { icon: "🎯", text: "您的冒险精神和行动力是成功的关键，但要学会在行动前做适当的风险评估。" },
-                    { icon: "⏰", text: "多考虑长期后果而非仅仅追求短期利益。提前规划能为未来创造更多可能性。" },
-                    { icon: "💭", text: "培养深度思考的能力。适度放慢脚步思考战略，不会削弱您的行动优势。" }
-                ]
-            },
-            "ESFP": { name: "表演者", brief: "活泼开朗的社交明星，享受成为关注的焦点。富有感染力，能让周围的人感到快乐和活力。",
-                careers: ["演员", "主持人", "销售代表", "活动策划", "摄影师", "教师", "导游", "美容师"],
-                traits: ["感染力强", "社交能力强", "富有魅力", "乐观开朗", "富有表现力", "活在当下"],
-                advice: [
-                    { icon: "🎯", text: "您的热情和活力让他人喜欢接近，但要注意培养深度专注的能力。" },
-                    { icon: "💡", text: "学会独处和自我反思，这对您的个人成长和深度思考至关重要。" },
-                    { icon: "💪", text: "克服冲动消费和即兴决定的习惯，设定长期目标并为未来储蓄和投资。" }
-                ]
-            }
-        };
+// Event listeners
+document.getElementById('startBtn').addEventListener('click', startTest);
+document.getElementById('btnPrev').addEventListener('click', prevQ);
+document.getElementById('btnNext').addEventListener('click', nextQ);
+document.getElementById('restartBtn').addEventListener('click', restartTest);
+document.getElementById('shareBtn').addEventListener('click', shareResult);
 
-        // State
-        let current = 0;
-        let answers = {};
-        let raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+function startTest() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('questionScreen').classList.remove('hidden');
+    document.getElementById('progressWrap').classList.add('show');
+    renderQ(0);
+}
 
-        // Particles
-        (function() {
-            const c = document.getElementById('particles');
-            for (let i = 0; i < 25; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 20 + 's';
-                p.style.animationDuration = (18 + Math.random() * 12) + 's';
-                c.appendChild(p);
-            }
-        })();
+function renderQ(idx) {
+    var q = questions[idx];
+    document.getElementById('qNum').textContent = '第 ' + (idx + 1) + ' 题';
+    document.getElementById('qDim').textContent = '维度：' + q.dim;
+    document.getElementById('qText').textContent = q.text;
 
-        function startTest() {
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('questionScreen').classList.remove('hidden');
-            document.getElementById('progressWrap').classList.remove('hidden');
-            renderQ(0);
+    var list = document.getElementById('optList');
+    list.innerHTML = '';
+    q.opts.forEach(function(opt, i) {
+        var div = document.createElement('div');
+        div.className = 'opt-item' + (answers[idx] === i ? ' sel' : '');
+        div.innerHTML = '<div class="opt-dot"></div><span class="opt-label">' + opt.t + '</span>';
+        div.addEventListener('click', function() { pick(idx, i); });
+        list.appendChild(div);
+    });
+
+    var pct = (idx / questions.length) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = '题目 ' + (idx + 1) + ' / ' + questions.length;
+    document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+
+    document.getElementById('btnPrev').disabled = idx === 0;
+    document.getElementById('btnNext').disabled = answers[idx] === undefined;
+    document.getElementById('btnNext').textContent = idx === questions.length - 1 ? '提交测评' : '下一题';
+}
+
+function pick(qi, oi) {
+    answers[qi] = oi;
+    document.querySelectorAll('.opt-item').forEach(function(el, i) {
+        el.classList.toggle('sel', i === oi);
+    });
+    document.getElementById('btnNext').disabled = false;
+}
+
+function nextQ() {
+    if (current < questions.length - 1) {
+        current++;
+        renderQ(current);
+    } else {
+        submitTest();
+    }
+}
+
+function prevQ() {
+    if (current > 0) {
+        current--;
+        renderQ(current);
+    }
+}
+
+function submitTest() {
+    document.getElementById('questionScreen').classList.add('hidden');
+    document.getElementById('loadingScreen').style.display = 'block';
+    document.getElementById('progressWrap').classList.remove('show');
+
+    raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    questions.forEach(function(q, i) {
+        if (answers[i] !== undefined) {
+            raw[q.dir] += q.opts[answers[i]].s;
         }
+    });
 
-        function renderQ(idx) {
-            const q = questions[idx];
-            document.getElementById('qNum').textContent = `第 ${idx + 1} 题`;
-            document.getElementById('qDim').textContent = `维度：${q.dim}`;
-            document.getElementById('qText').textContent = q.text;
-
-            const list = document.getElementById('optList');
-            list.innerHTML = '';
-            q.opts.forEach((opt, i) => {
-                const div = document.createElement('div');
-                div.className = 'opt-item' + (answers[idx] === i ? ' sel' : '');
-                div.innerHTML = `<div class="opt-dot"></div><span class="opt-label">${opt.t}</span>`;
-                div.onclick = () => pick(idx, i);
-                list.appendChild(div);
-            });
-
-            const pct = (idx / questions.length) * 100;
-            document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressLabel').textContent = `题目 ${idx + 1} / ${questions.length}`;
-            document.getElementById('progressPct').textContent = Math.round(pct) + '%';
-
-            document.getElementById('btnPrev').disabled = idx === 0;
-            document.getElementById('btnNext').disabled = answers[idx] === undefined;
-            document.getElementById('btnNext').textContent = idx === questions.length - 1 ? '提交测评' : '下一题';
+    var steps = ["数据标准化处理中", "维度得分计算中", "一致性检验分析中", "性格类型匹配中", "报告生成中"];
+    var stepIdx = 0;
+    var stepTimer = setInterval(function() {
+        if (stepIdx < steps.length) {
+            document.getElementById('loadingStep').textContent = steps[stepIdx++];
         }
+    }, 350);
 
-        function pick(qi, oi) {
-            answers[qi] = oi;
-            document.querySelectorAll('.opt-item').forEach((el, i) => {
-                el.classList.toggle('sel', i === oi);
-            });
-            document.getElementById('btnNext').disabled = false;
+    setTimeout(function() {
+        clearInterval(stepTimer);
+        showResult();
+    }, 2000);
+}
+
+function showResult() {
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('resultScreen').style.display = 'block';
+
+    var type = (raw.E >= raw.I ? 'E' : 'I') + (raw.S >= raw.N ? 'S' : 'N') + (raw.T >= raw.F ? 'T' : 'F') + (raw.J >= raw.P ? 'J' : 'P');
+    var info = types[type];
+
+    document.getElementById('resCode').textContent = type;
+    document.getElementById('resName').textContent = info.name + '型人格';
+    document.getElementById('resBrief').textContent = info.brief;
+
+    // Radar - CSS only
+    var radarWrap = document.getElementById('radarWrap');
+    radarWrap.innerHTML = '';
+    var radarData = [
+        { label: '外向性 E', value: Math.round(raw.E / 3 * 10), key: 'E' },
+        { label: '实感性 S', value: Math.round(raw.S / 3 * 10), key: 'S' },
+        { label: '思考性 T', value: Math.round(raw.T / 3 * 10), key: 'T' },
+        { label: '判断性 J', value: Math.round(raw.J / 3 * 10), key: 'J' }
+    ];
+    radarData.forEach(function(d) {
+        var item = document.createElement('div');
+        item.className = 'radar-item';
+        item.innerHTML = '<div class="radar-label">' + d.label + '</div>' +
+            '<div class="radar-chart" style="--p:' + d.value + '">' +
+            '<div class="radar-inner">' + d.value + '</div></div>' +
+            '<div class="radar-title">得分 ' + d.value + '/10</div>';
+        radarWrap.appendChild(item);
+    });
+
+    // Scores
+    var dimMap = [
+        { label: '外向性 E — 内向性 I', k1: 'E', k2: 'I', c: '#667eea' },
+        { label: '实感性 S — 直觉性 N', k1: 'S', k2: 'N', c: '#764ba2' },
+        { label: '思考性 T — 情感性 F', k1: 'T', k2: 'F', c: '#48dbfb' },
+        { label: '判断性 J — 知觉性 P', k1: 'J', k2: 'P', c: '#1dd1a1' }
+    ];
+    var scoreRow = document.getElementById('scoreRow');
+    scoreRow.innerHTML = '';
+    dimMap.forEach(function(d) {
+        var total = raw[d.k1] + raw[d.k2];
+        var p1 = total > 0 ? (raw[d.k1] / total * 100) : 50;
+        var winner = p1 >= 50 ? d.k1 : d.k2;
+        var card = document.createElement('div');
+        card.className = 'score-card';
+        card.innerHTML = '<div class="score-label">' + d.label + '</div>' +
+            '<div class="score-bar-wrap">' +
+            '<div class="score-bar"><div class="score-fill" style="width:' + p1 + '%;background:' + d.c + ';"></div></div>' +
+            '<span class="score-val">' + p1.toFixed(0) + '%</span></div>' +
+            '<div class="score-letter">主导倾向：' + winner + '（' + raw[winner] + '分）</div>';
+        scoreRow.appendChild(card);
+    });
+
+    // Careers
+    var careerGrid = document.getElementById('careerGrid');
+    careerGrid.innerHTML = '';
+    info.careers.forEach(function(c) {
+        var s = document.createElement('span');
+        s.className = 'trait-tag highlight';
+        s.textContent = c;
+        careerGrid.appendChild(s);
+    });
+
+    // Traits
+    var traitRow = document.getElementById('traitRow');
+    traitRow.innerHTML = '';
+    info.traits.forEach(function(t, i) {
+        var s = document.createElement('span');
+        s.className = 'trait-tag' + (i < 3 ? ' highlight' : '');
+        s.textContent = t;
+        traitRow.appendChild(s);
+    });
+
+    // Reliability
+    var reliability = calcReliability();
+    var relScore = document.getElementById('reliabilityScore');
+    var relDesc = document.getElementById('reliabilityDesc');
+    if (reliability >= 0.8) {
+        relScore.textContent = '很高';
+        relDesc.textContent = '一致性系数达到' + (reliability * 100).toFixed(0) + '%，说明您的作答非常一致，测评结果具有很高的可信度。';
+    } else if (reliability >= 0.6) {
+        relScore.textContent = '较高';
+        relDesc.textContent = '一致性系数为' + (reliability * 100).toFixed(0) + '%，测评结果较为可靠。您可能存在一些矛盾特质，这也是人性的丰富之处。';
+    } else {
+        relScore.textContent = '一般';
+        relDesc.textContent = '一致性系数为' + (reliability * 100).toFixed(0) + '%，表明您的性格特质较为多元，可能在不同情境下表现出不同的倾向。';
+    }
+
+    // Advice
+    var adviceList = document.getElementById('adviceList');
+    adviceList.innerHTML = '';
+    info.advice.forEach(function(a) {
+        var item = document.createElement('div');
+        item.className = 'advice-item';
+        item.innerHTML = '<span class="advice-icon">' + a.icon + '</span><span>' + a.text + '</span>';
+        adviceList.appendChild(item);
+    });
+}
+
+function calcReliability() {
+    var matches = 0;
+    var total = 0;
+    var pairs = [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9], [10, 11]];
+    pairs.forEach(function(pair) {
+        var a = pair[0], b = pair[1];
+        if (answers[a] !== undefined && answers[b] !== undefined) {
+            total++;
+            var qa = questions[a].opts[answers[a]].s;
+            var qb = questions[b].opts[answers[b]].s;
+            if ((qa > 1 && qb < 2) || (qb > 1 && qa < 2)) matches++;
         }
+    });
+    return total > 0 ? matches / total : 0.7;
+}
 
-        function nextQ() {
-            if (current < questions.length - 1) {
-                current++;
-                renderQ(current);
-            } else {
-                submitTest();
-            }
-        }
+function restartTest() {
+    current = 0;
+    answers = {};
+    raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    document.getElementById('resultScreen').style.display = 'none';
+    document.getElementById('startScreen').classList.remove('hidden');
+    document.getElementById('questionScreen').classList.add('hidden');
+    document.getElementById('progressWrap').classList.remove('show');
+}
 
-        function prevQ() {
-            if (current > 0) {
-                current--;
-                renderQ(current);
-            }
-        }
-
-        function submitTest() {
-            document.getElementById('questionScreen').classList.add('hidden');
-            document.getElementById('loadingScreen').style.display = 'block';
-            document.getElementById('progressWrap').classList.add('hidden');
-
-            // Score
-            raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-            questions.forEach((q, i) => {
-                if (answers[i] !== undefined) {
-                    const s = q.opts[answers[i]].s;
-                    raw[q.dir] += s;
-                }
-            });
-
-            const steps = ["数据标准化处理中", "维度得分计算中", "一致性检验分析中", "性格类型匹配中", "报告生成中"];
-            let stepIdx = 0;
-            const stepTimer = setInterval(() => {
-                if (stepIdx < steps.length) {
-                    document.getElementById('loadingStep').textContent = steps[stepIdx++];
-                }
-            }, 350);
-
-            setTimeout(() => {
-                clearInterval(stepTimer);
-                showResult();
-            }, 2000);
-        }
-
-        function showResult() {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('resultScreen').style.display = 'block';
-
-            const type = (raw.E >= raw.I ? 'E' : 'I') + (raw.S >= raw.N ? 'S' : 'N') + (raw.T >= raw.F ? 'T' : 'F') + (raw.J >= raw.P ? 'J' : 'P');
-            const info = types[type];
-
-            document.getElementById('resCode').textContent = type;
-            document.getElementById('resName').textContent = info.name + '型人格';
-            document.getElementById('resBrief').textContent = info.brief;
-
-            // Radar
-            const ctx = document.getElementById('radarChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['外向性', '实感性', '思考性', '判断性'],
-                    datasets: [{
-                        data: [
-                            raw.E / 3,
-                            raw.S / 3,
-                            raw.T / 3,
-                            raw.J / 3
-                        ],
-                        fill: true,
-                        backgroundColor: 'rgba(102,126,234,0.18)',
-                        borderColor: '#667eea',
-                        pointBackgroundColor: '#667eea',
-                        pointBorderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 12,
-                            ticks: { display: false },
-                            grid: { color: 'rgba(255,255,255,0.08)' },
-                            angleLines: { color: 'rgba(255,255,255,0.08)' },
-                            pointLabels: { font: { size: 12, color: '#fff' } }
-                        }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // Scores
-            const dimMap = [
-                { label: '外向性 E — 内向性 I', k1: 'E', k2: 'I', c: '#667eea' },
-                { label: '实感性 S — 直觉性 N', k1: 'S', k2: 'N', c: '#764ba2' },
-                { label: '思考性 T — 情感性 F', k1: 'T', k2: 'F', c: '#48dbfb' },
-                { label: '判断性 J — 知觉性 P', k1: 'J', k2: 'P', c: '#1dd1a1' }
-            ];
-            const scoreRow = document.getElementById('scoreRow');
-            scoreRow.innerHTML = '';
-            dimMap.forEach(d => {
-                const total = raw[d.k1] + raw[d.k2];
-                const p1 = total > 0 ? (raw[d.k1] / total * 100) : 50;
-                const winner = p1 >= 50 ? d.k1 : d.k2;
-                const card = document.createElement('div');
-                card.className = 'score-card';
-                card.innerHTML = `
-                    <div class="score-label">${d.label}</div>
-                    <div class="score-bar-wrap">
-                        <div class="score-bar"><div class="score-fill" style="width:${p1}%;background:${d.c};"></div></div>
-                        <span class="score-val">${p1.toFixed(0)}%</span>
-                    </div>
-                    <div class="score-letter">主导倾向：${winner}（${raw[winner]}分）</div>
-                `;
-                scoreRow.appendChild(card);
-            });
-
-            // Careers
-            const careerGrid = document.getElementById('careerGrid');
-            careerGrid.innerHTML = '';
-            info.careers.forEach(c => {
-                const s = document.createElement('span');
-                s.className = 'trait-tag highlight';
-                s.textContent = c;
-                careerGrid.appendChild(s);
-            });
-
-            // Traits
-            const traitRow = document.getElementById('traitRow');
-            traitRow.innerHTML = '';
-            info.traits.forEach((t, i) => {
-                const s = document.createElement('span');
-                s.className = 'trait-tag' + (i < 3 ? ' highlight' : '');
-                s.textContent = t;
-                traitRow.appendChild(s);
-            });
-
-            // Reliability
-            const reliability = calcReliability();
-            const relScore = document.getElementById('reliabilityScore');
-            const relDesc = document.getElementById('reliabilityDesc');
-            if (reliability >= 0.8) {
-                relScore.textContent = '很高';
-                relDesc.textContent = `一致性系数达到${(reliability * 100).toFixed(0)}%，说明您的作答非常一致，测评结果具有很高的可信度。`;
-            } else if (reliability >= 0.6) {
-                relScore.textContent = '较高';
-                relDesc.textContent = `一致性系数为${(reliability * 100).toFixed(0)}%，测评结果较为可靠。您可能存在一些矛盾特质，这也是人性的丰富之处。`;
-            } else {
-                relScore.textContent = '一般';
-                relDesc.textContent = `一致性系数为${(reliability * 100).toFixed(0)}%，表明您的性格特质较为多元，可能在不同情境下表现出不同的倾向。`;
-            }
-
-            // Advice
-            const adviceList = document.getElementById('adviceList');
-            adviceList.innerHTML = '';
-            info.advice.forEach(a => {
-                const item = document.createElement('div');
-                item.className = 'advice-item';
-                item.innerHTML = `<span class="advice-icon">${a.icon}</span><span>${a.text}</span>`;
-                adviceList.appendChild(item);
-            });
-        }
-
-        // Consistency check using reverse-coded items
-        function calcReliability() {
-            let matches = 0;
-            let total = 0;
-            // E-I reverse pairs
-            const pairs = [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9], [10, 11]];
-            pairs.forEach(([a, b]) => {
-                if (answers[a] !== undefined && answers[b] !== undefined) {
-                    // If one is E-dominant, the reverse should be I-dominant
-                    total++;
-                    const qa = questions[a].opts[answers[a]].s;
-                    const qb = questions[b].opts[answers[b]].s;
-                    // High score on one should correlate with low on reverse
-                    if ((qa > 1 && qb < 2) || (qb > 1 && qa < 2)) matches++;
-                }
-            });
-            return total > 0 ? matches / total : 0.7;
-        }
-
-        function restartTest() {
-            current = 0;
-            answers = {};
-            raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-            document.getElementById('resultScreen').style.display = 'none';
-            document.getElementById('startScreen').classList.remove('hidden');
-            document.getElementById('questionScreen').classList.add('hidden');
-            document.getElementById('progressWrap').classList.add('hidden');
-        }
-
-        function shareResult() {
-            const type = document.getElementById('resCode').textContent;
-            const name = document.getElementById('resName').textContent;
-            const text = `我的SBTI职业性格测评结果：${type}（${name}）。测试共48道专业题目，快来测测你的性格类型吧！`;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('测评结果已复制到剪贴板！');
-            });
-        }
-    </script>
+function shareResult() {
+    var type = document.getElementById('resCode').textContent;
+    var name = document.getElementById('resName').textContent;
+    var text = '我的SBTI职业性格测评结果：' + type + '（' + name + '）。测试共48道专业题目，快来测测你的性格类型吧！';
+    navigator.clipboard.writeText(text).then(function() {
+        alert('测评结果已复制到剪贴板！');
+    });
+}
+</script>
 </body>
 </html>
